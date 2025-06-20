@@ -50,6 +50,17 @@ jobs:
       if: ${{ runner.debug }}
       run: cat ${{ steps.task-def.outputs.task-definition }}  
       
+    - name: Create ECS Cluster if not exists
+      run: |
+        CLUSTER_EXISTS=$(aws ecs describe-clusters --clusters ${{ secrets.ECS_CLUSTER }} --query 'clusters[0].status' --output text 2>/dev/null || echo "None")
+        if [ "$CLUSTER_EXISTS" = "None" ] || [ "$CLUSTER_EXISTS" = "INACTIVE" ]; then
+          echo "Creating ECS cluster..."
+          aws ecs create-cluster --cluster-name ${{ secrets.ECS_CLUSTER }}
+          echo "ECS cluster created successfully"
+        else
+          echo "ECS cluster already exists"
+        fi
+      
     - name: Create ECS Service if not exists
       run: |
         SERVICE_EXISTS=$(aws ecs describe-services --cluster ${{ secrets.ECS_CLUSTER }} --services ${{ secrets.ECS_SERVICE }} --query 'services[0].status' --output text 2>/dev/null || echo "None")
