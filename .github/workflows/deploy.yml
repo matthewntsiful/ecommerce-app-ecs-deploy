@@ -4,18 +4,26 @@ on:
   push:
     branches:
       - main
-    # Remove branches-ignore and paths-ignore from here
-  workflow_dispatch:    
-
-
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.dockerignore'
+      - 'Dockerfile.test'
+  
+  pull_request:
+    branches:
+      - main
+  
 jobs:
-  deploy:
+  build-and-test:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
-      actions: read
-
+    
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
@@ -30,13 +38,11 @@ jobs:
     - name: Log in to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build and push Docker image
+    - name: Build Docker image
       id: build-image
       run: |
         IMAGE_TAG=${{ github.sha }}
-        docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
-        docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
-        docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+        docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
         echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
     - name: Run Trivy vulnerability scanner
@@ -50,16 +56,43 @@ jobs:
         severity: 'CRITICAL'
         timeout: '10m'
 
+    - name: Push Docker image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        IMAGE_TAG=${{ steps.build-image.outputs.image-tag }}
+        docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
+        docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
+        docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ./task-definition.json
         container-name: ${{ secrets.CONTAINER_NAME }} 
-        image: ${{ secrets.ECR_REPOSITORY_URI }}:${{ steps.build-image.outputs.image-tag }}
+        image: ${{ secrets.ECR_REPOSITORY_URI }}:${{ github.sha }}
 
     - name: Debug Rendered Task Definition
-      if: ${{ runner.debug }}
+      if: runner.debug == '1'
       run: cat ${{ steps.task-def.outputs.task-definition }}  
       
    
@@ -72,11 +105,10 @@ jobs:
         wait-for-service-stability: true
 
   notify:
-    needs: deploy
-    if: always()
+    needs: [build-and-test, deploy]
+    if: always() && (needs.build-and-test.result != 'skipped')
     uses: ./.github/workflows/slack.yml
     with:
-      status: ${{ needs.deploy.result }}
+      status: ${{ needs.deploy.result || needs.build-and-test.result }}
     secrets:
       slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-      
