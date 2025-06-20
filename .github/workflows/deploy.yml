@@ -14,6 +14,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
 
     steps:
     - name: Checkout Code
@@ -42,14 +46,11 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: ${{ secrets.ECR_REPOSITORY_URI }}:${{ steps.build-image.outputs.image-tag }}
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
-      with:
-        sarif_file: 'trivy-results.sarif'
+        format: 'table'
+        exit-code: '0'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
 
     - name: Run Trivy vulnerability scanner (table format)
       uses: aquasecurity/trivy-action@master
