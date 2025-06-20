@@ -14,19 +14,52 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Slack message color
-        id: color
+      - name: Set Slack message details
+        id: details
         run: |
-          if [ "${{ inputs.status }}" = "success" ]; then
-            echo "color=good" >> $GITHUB_OUTPUT
-          else
-            echo "color=danger" >> $GITHUB_OUTPUT
-          fi
+          case "${{ inputs.status }}" in
+            "success")
+              echo "color=good" >> $GITHUB_OUTPUT
+              echo "emoji=:white_check_mark:" >> $GITHUB_OUTPUT
+              echo "status_text=succeeded" >> $GITHUB_OUTPUT
+              ;;
+            "failure")
+              echo "color=danger" >> $GITHUB_OUTPUT
+              echo "emoji=:x:" >> $GITHUB_OUTPUT
+              echo "status_text=failed" >> $GITHUB_OUTPUT
+              ;;
+            "cancelled")
+              echo "color=warning" >> $GITHUB_OUTPUT
+              echo "emoji=:warning:" >> $GITHUB_OUTPUT
+              echo "status_text=was cancelled" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "color=#808080" >> $GITHUB_OUTPUT
+              echo "emoji=:question:" >> $GITHUB_OUTPUT
+              echo "status_text=completed with status: ${{ inputs.status }}" >> $GITHUB_OUTPUT
+              ;;
+          esac
 
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.25.0
         with:
-          payload: >
-            {"text": "Deployment ${{ inputs.status }} for ${{ github.repository }} on branch ${{ github.ref_name }}", "attachments": [{"color": "${{ steps.color.outputs.color }}", "text": "See details in GitHub Actions."}]}
+          payload: |
+            {
+              "text": "${{ steps.details.outputs.emoji }} Deployment ${{ steps.details.outputs.status_text }}",
+              "attachments": [{
+                "color": "${{ steps.details.outputs.color }}",
+                "fields": [
+                  {"title": "Repository", "value": "${{ github.repository }}", "short": true},
+                  {"title": "Branch", "value": "${{ github.ref_name }}", "short": true},
+                  {"title": "Commit", "value": "<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>", "short": true},
+                  {"title": "Author", "value": "${{ github.actor }}", "short": true}
+                ],
+                "actions": [{
+                  "type": "button",
+                  "text": "View Workflow",
+                  "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                }]
+              }]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}

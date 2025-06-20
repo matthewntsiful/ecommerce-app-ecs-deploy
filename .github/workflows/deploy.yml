@@ -1,4 +1,4 @@
-name: Build and Push to AWS ECR, then deploy to ECS Fargate
+name: Build and Push to AWS ECR, then deploy to ECS EC2
 
 on:
   push:
@@ -8,10 +8,7 @@ on:
       - 'docs/**'
       - README.md
       - LICENSE
-  pull_request:
-    branches:
-      - main
-#   workflow_dispatch:    
+  workflow_dispatch:    
 
 
 jobs:
@@ -32,18 +29,14 @@ jobs:
     - name: Log in to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build Docker image
+    - name: Build and push Docker image
       id: build-image
       run: |
-        docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
-
-    - name: Tag Docker image
-      run: |
-        docker tag ${{ secrets.ECR_REPOSITORY_URI }}:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
-
-    - name: Push Docker image to Amazon ECR
-      run: |
+        IMAGE_TAG=${{ github.sha }}
+        docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
+        docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
         docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+        echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
@@ -51,9 +44,10 @@ jobs:
       with:
         task-definition: ./task-definition.json
         container-name: ${{ secrets.CONTAINER_NAME }} 
-        image: ${{ secrets.ECR_REPOSITORY_URI }}:latest
+        image: ${{ secrets.ECR_REPOSITORY_URI }}:${{ steps.build-image.outputs.image-tag }}
 
     - name: Debug Rendered Task Definition
+      if: runner.debug == '1'
       run: cat ${{ steps.task-def.outputs.task-definition }}  
       
     - name: Deploy Amazon ECS task definition
@@ -66,6 +60,7 @@ jobs:
 
   notify:
     needs: deploy
+    if: always()
     uses: ./.github/workflows/slack.yml
     with:
       status: ${{ needs.deploy.result }}
