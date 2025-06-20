@@ -1,0 +1,9 @@
+node_modules
+.git
+.github
+docs
+tests
+*.md
+.gitignore
+.gitattributes
+task-definition.json
