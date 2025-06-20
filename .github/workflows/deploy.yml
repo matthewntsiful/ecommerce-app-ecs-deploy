@@ -47,7 +47,7 @@ jobs:
         image: ${{ secrets.ECR_REPOSITORY_URI }}:${{ steps.build-image.outputs.image-tag }}
 
     - name: Debug Rendered Task Definition
-      if: runner.debug == '1'
+      if: ${{ runner.debug }}
       run: cat ${{ steps.task-def.outputs.task-definition }}  
       
     - name: Deploy Amazon ECS task definition
