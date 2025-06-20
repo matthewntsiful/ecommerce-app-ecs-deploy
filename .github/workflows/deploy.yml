@@ -50,6 +50,23 @@ jobs:
       if: ${{ runner.debug }}
       run: cat ${{ steps.task-def.outputs.task-definition }}  
       
+    - name: Create ECS Service if not exists
+      run: |
+        SERVICE_EXISTS=$(aws ecs describe-services --cluster ${{ secrets.ECS_CLUSTER }} --services ${{ secrets.ECS_SERVICE }} --query 'services[0].status' --output text 2>/dev/null || echo "None")
+        if [ "$SERVICE_EXISTS" = "None" ] || [ "$SERVICE_EXISTS" = "INACTIVE" ]; then
+          echo "Creating ECS service..."
+          aws ecs create-service \
+            --cluster ${{ secrets.ECS_CLUSTER }} \
+            --service-name ${{ secrets.ECS_SERVICE }} \
+            --task-definition ${{ steps.task-def.outputs.task-definition }} \
+            --desired-count 1 \
+            --launch-type EC2 \
+            --deployment-configuration maximumPercent=200,minimumHealthyPercent=50
+          echo "ECS service created successfully"
+        else
+          echo "ECS service already exists"
+        fi
+      
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
