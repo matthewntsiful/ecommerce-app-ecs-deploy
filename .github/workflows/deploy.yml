@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+  
     paths-ignore:
       - 'docs/**'
       - README.md
       - LICENSE
+       - 'dependabot/**'
   workflow_dispatch:    
 
 
