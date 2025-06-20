@@ -5,7 +5,7 @@
             "name": "ecommerce-web-app-container",
             "image": "011921741878.dkr.ecr.eu-north-1.amazonaws.com/ecommerce-web-app:latest",
             "cpu": 0,
-            "memoryReservation": 3072,
+            "memoryReservation": 256,
             "portMappings": [
                 {
                     "name": "ecommerce-web-app-container-80-tcp",
@@ -51,8 +51,8 @@
     "requiresCompatibilities": [
         "EC2"
     ],
-    "cpu": "2048",
-    "memory": "6144",
+    "cpu": "256",
+    "memory": "512",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
