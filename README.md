@@ -8,6 +8,8 @@
 
 A containerized e-commerce web application deployed on AWS ECS with automated CI/CD pipeline, security scanning, and Slack notifications.
 
+---
+
 ## 🏗️ Architecture
 
 ```
@@ -26,6 +28,8 @@ A containerized e-commerce web application deployed on AWS ECS with automated CI
                        └──────────────────┘    └─────────────────┘
 ```
 
+---
+
 ## 🚀 Features
 
 - **Containerized Application**: Nginx-based static web application
@@ -33,22 +37,26 @@ A containerized e-commerce web application deployed on AWS ECS with automated CI
 - **Security Scanning**: Trivy vulnerability scanning with deployment gates
 - **AWS ECS Deployment**: Container orchestration on EC2 launch type
 - **Slack Notifications**: Real-time deployment status updates
-- **Dependency Management**: Automated updates via Dependabot
+- **Dependency Management**: Automated updates via Dependabot (PRs do not trigger deployment)
 - **Infrastructure as Code**: ECS task definitions and configurations
+
+---
 
 ## 🛠️ Technology Stack
 
-| Component | Technology |
-|-----------|------------|
-| **Frontend** | HTML, CSS, JavaScript |
-| **Web Server** | Nginx 1.27 Alpine |
-| **Container** | Docker |
-| **Registry** | AWS ECR |
-| **Orchestration** | AWS ECS (EC2 Launch Type) |
-| **CI/CD** | GitHub Actions |
-| **Security** | Trivy Scanner |
-| **Notifications** | Slack Webhooks |
-| **Monitoring** | AWS CloudWatch |
+| Component        | Technology                |
+|------------------|--------------------------|
+| **Frontend**     | HTML, CSS, JavaScript    |
+| **Web Server**   | Nginx 1.27 Alpine        |
+| **Container**    | Docker                   |
+| **Registry**     | AWS ECR                  |
+| **Orchestration**| AWS ECS (EC2 Launch Type)|
+| **CI/CD**        | GitHub Actions           |
+| **Security**     | Trivy Scanner            |
+| **Notifications**| Slack Webhooks           |
+| **Monitoring**   | AWS CloudWatch           |
+
+---
 
 ## 📋 Prerequisites
 
@@ -56,6 +64,8 @@ A containerized e-commerce web application deployed on AWS ECS with automated CI
 - GitHub repository with Actions enabled
 - Slack workspace with incoming webhook
 - Docker installed locally (for development)
+
+---
 
 ## ⚙️ Setup Instructions
 
@@ -76,16 +86,16 @@ aws iam create-role --role-name ecsTaskExecutionRole --assume-role-policy-docume
 
 Set the following secrets in your GitHub repository:
 
-| Secret Name | Description | Example |
-|-------------|-------------|---------|
-| `AWS_ACCESS_KEY_ID` | AWS Access Key | `AKIA...` |
-| `AWS_SECRET_ACCESS_KEY` | AWS Secret Key | `wJalr...` |
-| `AWS_REGION` | AWS Region | `eu-north-1` |
-| `ECR_REPOSITORY_URI` | ECR Repository URI | `123456789.dkr.ecr.eu-north-1.amazonaws.com/ecommerce-web-app` |
-| `ECS_CLUSTER` | ECS Cluster Name | `ecommerce-cluster` |
-| `ECS_SERVICE` | ECS Service Name | `ecommerce-web-app-service` |
-| `CONTAINER_NAME` | Container Name | `ecommerce-web-app-container` |
-| `SLACK_WEBHOOK_URL` | Slack Webhook URL | `https://hooks.slack.com/...` |
+| Secret Name            | Description             | Example                                             |
+|-----------------------|-------------------------|-----------------------------------------------------|
+| `AWS_ACCESS_KEY_ID`   | AWS Access Key          | `AKIA...`                                           |
+| `AWS_SECRET_ACCESS_KEY`| AWS Secret Key         | `wJalr...`                                          |
+| `AWS_REGION`          | AWS Region              | `eu-north-1`                                        |
+| `ECR_REPOSITORY_URI`  | ECR Repository URI      | `123456789.dkr.ecr.eu-north-1.amazonaws.com/ecommerce-web-app` |
+| `ECS_CLUSTER`         | ECS Cluster Name        | `ecommerce-cluster`                                 |
+| `ECS_SERVICE`         | ECS Service Name        | `ecommerce-web-app-service`                         |
+| `CONTAINER_NAME`      | Container Name          | `ecommerce-web-app-container`                       |
+| `SLACK_WEBHOOK_URL`   | Slack Webhook URL       | `https://hooks.slack.com/...`                       |
 
 ### 3. Local Development
 
@@ -100,6 +110,8 @@ docker build -t ecommerce-web-app .
 # Run locally
 docker run -p 8080:80 ecommerce-web-app
 ```
+
+---
 
 ## 🔄 CI/CD Pipeline
 
@@ -117,7 +129,9 @@ The automated pipeline includes:
 
 - **Push to main branch**: Automatic deployment
 - **Manual trigger**: Via GitHub Actions UI
-- **Dependabot PRs**: Excluded from automatic deployment
+- **Dependabot PRs**: Excluded from automatic deployment (see workflow conditions)
+
+---
 
 ## 🔒 Security Features
 
@@ -127,12 +141,14 @@ The automated pipeline includes:
 - Generates security reports
 - Configurable severity thresholds
 
-### Security Configuration
+### Security Configuration Example
 ```yaml
 severity: 'CRITICAL'
 exit-code: '1'  # Fails pipeline on vulnerabilities
 timeout: '10m'
 ```
+
+---
 
 ## 📊 Resource Configuration
 
@@ -148,10 +164,12 @@ timeout: '10m'
 - **Memory Reservation**: 256 MB
 - **Health Checks**: Built-in nginx health
 
+---
+
 ## 🔧 Maintenance
 
 ### Automated Updates
-- **Dependabot**: Weekly dependency updates
+- **Dependabot**: Weekly dependency updates (GitHub Actions & Docker)
 - **GitHub Actions**: Automatic action version updates
 - **Docker Images**: Base image security updates
 
@@ -159,6 +177,8 @@ timeout: '10m'
 - **CloudWatch Logs**: Application and container logs
 - **ECS Metrics**: Service health and performance
 - **Slack Alerts**: Deployment notifications
+
+---
 
 ## 📁 Project Structure
 
@@ -171,11 +191,13 @@ timeout: '10m'
 ├── public/                     # Static web assets
 ├── src/                        # Application source code
 ├── Dockerfile                  # Production container definition
-├── Dockerfile.test            # Test container definition
-├── nginx.conf                 # Nginx configuration
-├── task-definition.json       # ECS task definition
-└── README.md                  # Project documentation
+├── Dockerfile.test             # Test container definition
+├── nginx.conf                  # Nginx configuration
+├── task-definition.json        # ECS task definition
+└── README.md                   # Project documentation
 ```
+
+---
 
 ## 🚀 Deployment
 
@@ -194,16 +216,18 @@ Use GitHub Actions UI:
 2. Select "Build and Push to AWS ECR, then deploy to ECS EC2"
 3. Click "Run workflow"
 
+---
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| **Insufficient Memory** | Reduce task memory allocation |
-| **Security Scan Failures** | Update base image or fix vulnerabilities |
-| **ECS Service Not Found** | Ensure ECS service exists or enable auto-creation |
-| **ECR Push Failures** | Verify AWS credentials and repository permissions |
+| Issue                    | Solution                                      |
+|--------------------------|-----------------------------------------------|
+| **Insufficient Memory**  | Reduce task memory allocation                 |
+| **Security Scan Failures**| Update base image or fix vulnerabilities      |
+| **ECS Service Not Found**| Ensure ECS service exists or enable auto-creation |
+| **ECR Push Failures**    | Verify AWS credentials and repository permissions |
 
 ### Debug Mode
 Enable debug logging by setting repository variable:
@@ -211,12 +235,16 @@ Enable debug logging by setting repository variable:
 ACTIONS_RUNNER_DEBUG = true
 ```
 
+---
+
 ## 📈 Performance Optimization
 
 - **Multi-stage builds**: Reduce image size
 - **Layer caching**: Optimize build times
 - **Resource limits**: Right-size container resources
 - **Health checks**: Ensure service reliability
+
+---
 
 ## 🤝 Contributing
 
@@ -226,9 +254,13 @@ ACTIONS_RUNNER_DEBUG = true
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open Pull Request
 
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 🙋‍♂️ Support
 
