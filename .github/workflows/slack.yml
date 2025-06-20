@@ -43,6 +43,7 @@ jobs:
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.25.0
         with:
+          webhook-type: incoming-webhook
           payload: |
             {
               "text": "${{ steps.details.outputs.emoji }} Deployment ${{ steps.details.outputs.status_text }}",
