@@ -1,0 +1,66 @@
+{
+    
+    "containerDefinitions": [
+        {
+            "name": "ecommerce-app-container",
+            "image": "011921741878.dkr.ecr.eu-north-1.amazonaws.com/ecommerce-app:latest",
+            "cpu": 1024,
+            "portMappings": [
+                {
+                    "name": "ecommerce-app-container-80-tcp",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/ecommerce-app-task_definition",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "eu-north-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "ecommerce-app-task_definition",
+    "taskRoleArn": "arn:aws:iam::011921741878:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::011921741878:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+  
+    "volumes": [],
+    
+    "requiresAttributes": [
+       
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+   
+  
+    "enableFaultInjection": false,
+    "tags": []
+}

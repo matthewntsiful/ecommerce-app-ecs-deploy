@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - BlakkBrotherInc Marketplace</title>
+    <link rel="stylesheet" href="../../public/assets/css/style.css">
+    <style>
+        .cart-container {
+            margin: 2rem 0;
+        }
+        .cart-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            font-weight: bold;
+        }
+        .cart-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .cart-product {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .cart-product img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .cart-quantity {
+            display: flex;
+            align-items: center;
+        }
+        .cart-quantity button {
+            background: #eee;
+            border: none;
+            width: 25px;
+            height: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .cart-quantity input {
+            width: 40px;
+            height: 25px;
+            text-align: center;
+            margin: 0 0.5rem;
+        }
+        .cart-price, .cart-total {
+            font-weight: bold;
+        }
+        .cart-remove {
+            color: #ff4444;
+            cursor: pointer;
+        }
+        .cart-summary {
+            margin-top: 2rem;
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 350px;
+            margin-left: auto;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .summary-row.total {
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .checkout-button {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav id="main-nav">
+            <div class="container">
+                <div class="logo">BlakkBrotherInc</div>
+                <ul class="nav-links">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="cart.html" class="active">Cart</a></li>
+                    <li><a href="account.html">Account</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h1>Your Shopping Cart</h1>
+            
+            <div class="cart-container">
+                <div class="cart-header">
+                    <div>Product</div>
+                    <div>Price</div>
+                    <div>Quantity</div>
+                    <div>Total</div>
+                </div>
+                
+                <div class="cart-item">
+                    <div class="cart-product">
+                        <img src="../../public/assets/images/product1.jpg" alt="Premium Hoodie">
+                        <div>
+                            <h3>Premium Hoodie</h3>
+                            <p>Size: Medium | Color: Black</p>
+                        </div>
+                    </div>
+                    <div class="cart-price">$59.99</div>
+                    <div class="cart-quantity">
+                        <button onclick="updateQuantity(1, -1)">-</button>
+                        <input type="number" value="1" min="1" max="10" id="qty-1" readonly>
+                        <button onclick="updateQuantity(1, 1)">+</button>
+                    </div>
+                    <div class="cart-total">
+                        $59.99
+                        <span class="cart-remove" onclick="removeItem(1)">✕</span>
+                    </div>
+                </div>
+                
+                <div class="cart-item">
+                    <div class="cart-product">
+                        <img src="../../public/assets/images/product3.jpg" alt="Urban Sneakers">
+                        <div>
+                            <h3>Urban Sneakers</h3>
+                            <p>Size: 10 | Color: Black/White</p>
+                        </div>
+                    </div>
+                    <div class="cart-price">$89.99</div>
+                    <div class="cart-quantity">
+                        <button onclick="updateQuantity(2, -1)">-</button>
+                        <input type="number" value="1" min="1" max="10" id="qty-2" readonly>
+                        <button onclick="updateQuantity(2, 1)">+</button>
+                    </div>
+                    <div class="cart-total">
+                        $89.99
+                        <span class="cart-remove" onclick="removeItem(2)">✕</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal (2 items)</span>
+                    <span>$149.98</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>$5.99</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax</span>
+                    <span>$12.50</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>$168.47</span>
+                </div>
+                <button class="btn checkout-button">Proceed to Checkout</button>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BlakkBrotherInc</h3>
+                    <p>Your premier destination for authentic urban fashion and lifestyle products.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">Twitter</a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 BlakkBrotherInc Marketplace. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function updateQuantity(itemId, change) {
+            const input = document.getElementById(`qty-${itemId}`);
+            const currentValue = parseInt(input.value);
+            const newValue = currentValue + change;
+            
+            if (newValue >= 1 && newValue <= 10) {
+                input.value = newValue;
+                // In a real app, you would update the total price here
+            }
+        }
+        
+        function removeItem(itemId) {
+            // In a real app, you would remove the item from the cart
+            const item = document.querySelector(`.cart-item:nth-child(${itemId + 1})`);
+            item.style.display = 'none';
+        }
+    </script>
+    <script src="../../public/assets/js/main.js"></script>
+</body>
+</html>

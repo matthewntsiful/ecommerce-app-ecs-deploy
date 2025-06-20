@@ -1,0 +1,121 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Premium Hoodie",
+      "price": 59.99,
+      "description": "Experience ultimate comfort with our Premium Hoodie. Made from high-quality materials, this hoodie features a soft interior, adjustable drawstring hood, front kangaroo pocket, and ribbed cuffs and hem.",
+      "category": "clothing",
+      "image": "product1.jpg",
+      "rating": 4.8,
+      "stock": 25,
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "colors": ["Black", "Gray", "Navy Blue", "Red"]
+    },
+    {
+      "id": 2,
+      "name": "Classic T-Shirt",
+      "price": 29.99,
+      "description": "Our Classic T-Shirt is a wardrobe essential. Made from 100% organic cotton, it offers both comfort and style for everyday wear.",
+      "category": "clothing",
+      "image": "product2.jpg",
+      "rating": 4.5,
+      "stock": 50,
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "colors": ["Black", "White", "Gray", "Blue", "Red"]
+    },
+    {
+      "id": 3,
+      "name": "Urban Sneakers",
+      "price": 89.99,
+      "description": "Step out in style with our Urban Sneakers. Featuring a comfortable fit, durable construction, and trendy design, these sneakers are perfect for any casual occasion.",
+      "category": "footwear",
+      "image": "product3.jpg",
+      "rating": 4.7,
+      "stock": 15,
+      "sizes": ["7", "8", "9", "10", "11", "12"],
+      "colors": ["Black/White", "All Black", "Gray/White"]
+    },
+    {
+      "id": 4,
+      "name": "Designer Cap",
+      "price": 24.99,
+      "description": "Top off your look with our Designer Cap. Featuring an adjustable strap for the perfect fit and embroidered logo on the front.",
+      "category": "accessories",
+      "image": "product4.jpg",
+      "rating": 4.3,
+      "stock": 30,
+      "sizes": ["One Size"],
+      "colors": ["Black", "White", "Red", "Blue"]
+    },
+    {
+      "id": 5,
+      "name": "Graphic Sweatshirt",
+      "price": 49.99,
+      "description": "Make a statement with our Graphic Sweatshirt. Features bold designs on a comfortable cotton-polyester blend fabric.",
+      "category": "clothing",
+      "image": "product5.jpg",
+      "rating": 4.6,
+      "stock": 20,
+      "sizes": ["S", "M", "L", "XL"],
+      "colors": ["Black", "Gray", "White"]
+    },
+    {
+      "id": 6,
+      "name": "Denim Jacket",
+      "price": 79.99,
+      "description": "Our classic Denim Jacket offers timeless style and durability. Perfect for layering in any season.",
+      "category": "clothing",
+      "image": "product6.jpg",
+      "rating": 4.9,
+      "stock": 12,
+      "sizes": ["S", "M", "L", "XL"],
+      "colors": ["Blue", "Black", "Light Wash"]
+    },
+    {
+      "id": 7,
+      "name": "Leather Wallet",
+      "price": 34.99,
+      "description": "Keep your essentials organized with our genuine Leather Wallet. Features multiple card slots and a bill compartment.",
+      "category": "accessories",
+      "image": "product7.jpg",
+      "rating": 4.4,
+      "stock": 40,
+      "sizes": ["One Size"],
+      "colors": ["Black", "Brown", "Tan"]
+    },
+    {
+      "id": 8,
+      "name": "Backpack",
+      "price": 69.99,
+      "description": "Carry your essentials in style with our durable Backpack. Features multiple compartments, padded laptop sleeve, and comfortable straps.",
+      "category": "accessories",
+      "image": "product8.jpg",
+      "rating": 4.7,
+      "stock": 18,
+      "sizes": ["One Size"],
+      "colors": ["Black", "Gray", "Navy"]
+    }
+  ],
+  
+  "categories": [
+    {
+      "id": "clothing",
+      "name": "Clothing",
+      "description": "Explore our collection of premium clothing items including hoodies, t-shirts, sweatshirts, and jackets.",
+      "image": "category1.jpg"
+    },
+    {
+      "id": "footwear",
+      "name": "Footwear",
+      "description": "Step out in style with our selection of sneakers, boots, and casual shoes.",
+      "image": "category2.jpg"
+    },
+    {
+      "id": "accessories",
+      "name": "Accessories",
+      "description": "Complete your look with our range of caps, wallets, backpacks, and more.",
+      "image": "category3.jpg"
+    }
+  ]
+}

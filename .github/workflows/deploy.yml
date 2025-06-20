@@ -1,0 +1,73 @@
+name: Build and Push to AWS ECR, then deploy to ECS Fargate
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - README.md
+      - LICENSE
+  pull_request:
+    branches:
+      - main
+#   workflow_dispatch:    
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Log in to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build Docker image
+      id: build-image
+      run: |
+        docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
+
+    - name: Tag Docker image
+      run: |
+        docker tag ${{ secrets.ECR_REPOSITORY_URI }}:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+    - name: Push Docker image to Amazon ECR
+      run: |
+        docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ./task-definition.json
+        container-name: ${{ secrets.CONTAINER_NAME }} 
+        image: ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+    - name: Debug Rendered Task Definition
+      run: cat ${{ steps.task-def.outputs.task-definition }}  
+      
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ secrets.ECS_SERVICE }}
+        cluster: ${{ secrets.ECS_CLUSTER }}
+        wait-for-service-stability: true
+
+  notify:
+    needs: deploy
+    uses: ./.github/workflows/slack.yml
+    with:
+      status: ${{ needs.deploy.result }}
+    secrets:
+      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}

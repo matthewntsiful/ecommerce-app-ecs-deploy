@@ -1,0 +1,32 @@
+name: 'Slack Notification'
+
+on:
+  workflow_call:
+    inputs:
+      status:
+        required: true
+        type: string
+    secrets:
+      slack_webhook:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Slack message color
+        id: color
+        run: |
+          if [ "${{ inputs.status }}" = "success" ]; then
+            echo "color=good" >> $GITHUB_OUTPUT
+          else
+            echo "color=danger" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: >
+            {"text": "Deployment ${{ inputs.status }} for ${{ github.repository }} on branch ${{ github.ref_name }}", "attachments": [{"color": "${{ steps.color.outputs.color }}", "text": "See details in GitHub Actions."}]}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}

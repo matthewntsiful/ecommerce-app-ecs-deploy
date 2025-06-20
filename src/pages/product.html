@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - BlakkBrotherInc Marketplace</title>
+    <link rel="stylesheet" href="../../public/assets/css/style.css">
+    <style>
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .product-image {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .product-image img {
+            width: 100%;
+            height: auto;
+        }
+        .product-info h1 {
+            margin-bottom: 1rem;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .product-description {
+            margin-bottom: 2rem;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .quantity-selector button {
+            background: #eee;
+            border: none;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .quantity-selector input {
+            width: 50px;
+            height: 30px;
+            text-align: center;
+            margin: 0 0.5rem;
+        }
+        .add-to-cart {
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav id="main-nav">
+            <div class="container">
+                <div class="logo">BlakkBrotherInc</div>
+                <ul class="nav-links">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                    <li><a href="account.html">Account</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="product-details">
+                <div class="product-image">
+                    <img src="../../public/assets/images/product1.jpg" alt="Premium Hoodie">
+                </div>
+                <div class="product-info">
+                    <h1>Premium Hoodie</h1>
+                    <p class="product-price">$59.99</p>
+                    <div class="product-description">
+                        <p>Experience ultimate comfort with our Premium Hoodie. Made from high-quality materials, this hoodie features:</p>
+                        <ul style="list-style-type: disc; margin-left: 20px; margin-top: 10px;">
+                            <li>80% cotton, 20% polyester blend</li>
+                            <li>Adjustable drawstring hood</li>
+                            <li>Front kangaroo pocket</li>
+                            <li>Ribbed cuffs and hem</li>
+                            <li>Machine washable</li>
+                        </ul>
+                        <p style="margin-top: 10px;">Available in multiple sizes and colors. Perfect for casual outings or lounging at home.</p>
+                    </div>
+                    <div class="product-options">
+                        <div class="size-selector" style="margin-bottom: 1rem;">
+                            <label for="size">Size:</label>
+                            <select id="size" name="size">
+                                <option value="s">Small</option>
+                                <option value="m" selected>Medium</option>
+                                <option value="l">Large</option>
+                                <option value="xl">X-Large</option>
+                            </select>
+                        </div>
+                        <div class="color-selector" style="margin-bottom: 1rem;">
+                            <label for="color">Color:</label>
+                            <select id="color" name="color">
+                                <option value="black" selected>Black</option>
+                                <option value="gray">Gray</option>
+                                <option value="navy">Navy Blue</option>
+                                <option value="red">Red</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="quantity-selector">
+                        <label for="quantity">Quantity:</label>
+                        <button onclick="decrementQuantity()">-</button>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="10">
+                        <button onclick="incrementQuantity()">+</button>
+                    </div>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            
+            <section id="related-products">
+                <h2>You May Also Like</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <img src="../../public/assets/images/product2.jpg" alt="Classic T-Shirt">
+                        <h3>Classic T-Shirt</h3>
+                        <p class="price">$29.99</p>
+                        <a href="product.html?id=2" class="btn">View Details</a>
+                    </div>
+                    <div class="product-card">
+                        <img src="../../public/assets/images/product3.jpg" alt="Urban Sneakers">
+                        <h3>Urban Sneakers</h3>
+                        <p class="price">$89.99</p>
+                        <a href="product.html?id=3" class="btn">View Details</a>
+                    </div>
+                    <div class="product-card">
+                        <img src="../../public/assets/images/product4.jpg" alt="Designer Cap">
+                        <h3>Designer Cap</h3>
+                        <p class="price">$24.99</p>
+                        <a href="product.html?id=4" class="btn">View Details</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BlakkBrotherInc</h3>
+                    <p>Your premier destination for authentic urban fashion and lifestyle products.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">Twitter</a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 BlakkBrotherInc Marketplace. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function incrementQuantity() {
+            const input = document.getElementById('quantity');
+            const currentValue = parseInt(input.value);
+            if (currentValue < 10) {
+                input.value = currentValue + 1;
+            }
+        }
+        
+        function decrementQuantity() {
+            const input = document.getElementById('quantity');
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        }
+    </script>
+    <script src="../../public/assets/js/main.js"></script>
+</body>
+</html>
