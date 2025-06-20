@@ -58,7 +58,7 @@ jobs:
           aws ecs create-service \
             --cluster ${{ secrets.ECS_CLUSTER }} \
             --service-name ${{ secrets.ECS_SERVICE }} \
-            --task-definition ${{ steps.task-def.outputs.task-definition }} \
+            --task-definition ecommerce-webapp-task-def \
             --desired-count 1 \
             --launch-type EC2 \
             --deployment-configuration maximumPercent=200,minimumHealthyPercent=50
