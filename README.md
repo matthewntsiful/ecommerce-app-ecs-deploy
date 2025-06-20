@@ -271,4 +271,4 @@ For support and questions:
 
 ---
 
-**Built with ❤️ using AWS ECS, Docker, and GitHub Actions**
+**Powered by Blakk Brother Inc**
