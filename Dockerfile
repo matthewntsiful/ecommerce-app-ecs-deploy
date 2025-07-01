@@ -1,4 +1,4 @@
-FROM nginx:1.27-alpine
+FROM nginx:1.29-alpine
 
 # Update packages to get latest security patches
 RUN apk update && apk upgrade && apk add --no-cache \
