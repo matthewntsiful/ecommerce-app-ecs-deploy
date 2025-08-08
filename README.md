@@ -12,21 +12,83 @@ A containerized e-commerce web application deployed on AWS ECS with automated CI
 
 ## 🏗️ Architecture
 
+```mermaid
+graph TD
+    %% Source Code Management
+    GitHub["GitHub Repository\n(Source Code)"]
+    
+    %% CI/CD Pipeline
+    subgraph GitHub_Actions["GitHub Actions Workflow"]
+        Build["Build Docker Image\n(nginx:1.27-alpine)"]
+        Test["Run Tests\n(Container Tests)"]
+        Trivy["Security Scan\n(Trivy)"]
+        Deploy["Deploy to ECS"]
+        Notify["Send Notification\n(Slack)"]
+    end
+    
+    %% AWS Infrastructure
+    subgraph AWS["AWS Cloud"]
+        ECR["Amazon ECR\n(Container Registry)"]
+        ECS["Amazon ECS\n(Container Orchestration)"]
+        EC2["EC2 Instances\n(Container Hosts)"]
+        ALB["Application Load Balancer"]
+        
+        subgraph VPC["VPC"]
+            subgraph Public_Subnet["Public Subnet"]
+                ALB
+            end
+            subgraph Private_Subnet["Private Subnet"]
+                EC2 -->|Hosts| ECS
+            end
+        end
+    end
+    
+    %% Application Components
+    subgraph Application["E-commerce Application"]
+        Nginx["Nginx Web Server\n(port 80)"]
+        Static["Static Files\n(HTML, CSS, JS, Images)"]
+        Nginx -->|Serves| Static
+    end
+    
+    %% Data Flow
+    GitHub -->|Push/PR| GitHub_Actions
+    GitHub_Actions --> Build --> Test --> Trivy --> Deploy
+    Deploy -->|Push Image| ECR
+    Deploy -->|Update Service| ECS
+    ECS -->|Runs on| EC2
+    ALB -->|Routes Traffic| ECS
+    GitHub_Actions -->|Send| Notify
+    Notify -->|Deployment Status| Slack["Slack Channel"]
+    
+    %% External Access
+    User["End User"] -->|HTTPS| ALB
+    
+    %% Styling
+    classDef github fill:#24292f,color:white,stroke:#444,stroke-width:2px
+    classDef aws fill:#FF9900,color:black,stroke:#FF9900,stroke-width:2px
+    classDef app fill:#4CAF50,color:white,stroke:#45a049,stroke-width:2px
+    classDef pipeline fill:#2196F3,color:white,stroke:#0b7dda,stroke-width:2px
+    
+    class GitHub github
+    class AWS,ECR,ECS,EC2,ALB,VPC,Public_Subnet,Private_Subnet aws
+    class Application,Nginx,Static app
+    class GitHub_Actions,Build,Test,Trivy,Deploy,Notify pipeline
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   GitHub Repo   │───▶│  GitHub Actions  │───▶│   AWS ECR       │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                │                        │
-                                ▼                        ▼
-                       ┌──────────────────┐    ┌─────────────────┐
-                       │  Trivy Scanner   │    │   AWS ECS       │
-                       └──────────────────┘    └─────────────────┘
-                                │                        │
-                                ▼                        ▼
-                       ┌──────────────────┐    ┌─────────────────┐
-                       │ Slack Notification│    │   EC2 Instance  │
-                       └──────────────────┘    └─────────────────┘
-```
+
+### Architecture Overview
+
+The architecture follows a modern cloud-native approach with the following key components:
+
+1. **Source Control**: GitHub repository hosting the application code and infrastructure as code.
+2. **CI/CD Pipeline**: GitHub Actions workflow that automates the build, test, security scan, and deployment processes.
+3. **Container Registry**: Amazon ECR stores the Docker images with proper versioning.
+4. **Container Orchestration**: Amazon ECS manages the deployment, scaling, and operations of containers.
+5. **Compute**: EC2 instances in a private subnet host the ECS containers.
+6. **Networking**: VPC with public and private subnets, secured by security groups and network ACLs.
+7. **Load Balancing**: Application Load Balancer distributes incoming traffic across ECS tasks.
+8. **Monitoring & Logging**: CloudWatch for logs and metrics, with alerts configured.
+9. **Security**: IAM roles, security groups, and Trivy scanning for container vulnerabilities.
+10. **Notifications**: Slack integration for deployment status updates.
 
 ---
 
